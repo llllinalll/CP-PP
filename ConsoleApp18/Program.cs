@@ -1,4 +1,4 @@
-﻿/////////////Системное программирование
+﻿/////////////Системное программирование и прикладное
 
 
 //using System;
@@ -568,5 +568,457 @@ class Program
         maze[posY, posX] = 'O';
     }
 }
+//Разработка системы учета посещаемости студентов
+
+//using System;
+//using System.Collections.Generic;
+//using System.IO;
+//using System.Linq;
+//using System.Text.RegularExpressions;
+//using System.Xml;
+//using Newtonsoft.Json;
+
+//public class AttendanceRecord
+//{
+//    public DateTime Date { get; set; }
+//    public bool IsPresent { get; set; }
+
+//    public AttendanceRecord(DateTime date, bool isPresent)
+//    {
+//        Date = date;
+//        IsPresent = isPresent;
+//    }
+//}
+
+//public class Subject
+//{
+//    public string Name { get; set; }
+//    public List<double> Grades { get; set; } = new List<double>();
+
+//    public Subject(string name)
+//    {
+//        Name = name;
+//    }
+
+//    public double GetAverageGrade()
+//    {
+//        return Grades.Count > 0 ? Grades.Average() : 0;
+//    }
+//}
+
+//public class Student
+//{
+//    public int Id { get; set; }
+//    public string Name { get; set; }
+//    public string Email { get; set; }
+//    public List<AttendanceRecord> Attendance { get; set; } = new List<AttendanceRecord>();
+//    public List<Subject> Subjects { get; set; } = new List<Subject>();
+//}
+
+//public class User
+//{
+//    public string Username { get; set; }
+//    public string Password { get; set; }
+//    public bool IsTeacher { get; set; } // true для преподавателя, false для ученика
+//}
+
+//public class AttendanceManager
+//{
+//    private List<Student> students = new List<Student>();
+//    private List<User> users = new List<User>();
+//    private const string StudentsFilePath = "students.json";
+//    private const string UsersFilePath = "users.json";
+//    private int nextId = 1;
+
+//    public AttendanceManager()
+//    {
+//        LoadStudents();
+//        LoadUsers();
+//    }
+
+//    private void LoadStudents()
+//    {
+//        if (File.Exists(StudentsFilePath))
+//        {
+//            var json = File.ReadAllText(StudentsFilePath);
+//            students = JsonConvert.DeserializeObject<List<Student>>(json) ?? new List<Student>();
+//            nextId = students.Count > 0 ? students.Max(s => s.Id) + 1 : 1; // Установка следующего ID
+//        }
+//    }
+
+//    private void SaveStudents()
+//    {
+//        var json = JsonConvert.SerializeObject(students, Newtonsoft.Json.Formatting.Indented);
+//        File.WriteAllText(StudentsFilePath, json);
+//    }
+
+//    private void LoadUsers()
+//    {
+//        if (File.Exists(UsersFilePath))
+//        {
+//            var json = File.ReadAllText(UsersFilePath);
+//            users = JsonConvert.DeserializeObject<List<User>>(json) ?? new List<User>();
+//        }
+//    }
+
+//    public void SaveUsers()
+//    {
+//        var json = JsonConvert.SerializeObject(users, Newtonsoft.Json.Formatting.Indented);
+//        File.WriteAllText(UsersFilePath, json);
+//    }
+
+//    public void AddStudent(Student student)
+//    {
+//        student.Id = nextId++;
+//        students.Add(student);
+//        SaveStudents();
+//    }
+
+//    public void RemoveStudent(int id)
+//    {
+//        var student = students.FirstOrDefault(s => s.Id == id);
+//        if (student != null)
+//        {
+//            students.Remove(student);
+//            SaveStudents();
+//            Console.WriteLine("Студент успешно удален.");
+//        }
+//        else
+//        {
+//            Console.WriteLine("Ошибка: Студент с данным ID не найден.");
+//        }
+//    }
+
+//    public void EditStudent(int id, Student updatedStudent)
+//    {
+//        var student = students.FirstOrDefault(s => s.Id == id);
+//        if (student != null)
+//        {
+//            student.Name = updatedStudent.Name;
+//            student.Email = updatedStudent.Email;
+//            SaveStudents();
+//            Console.WriteLine("Данные студента успешно обновлены.");
+//        }
+//        else
+//        {
+//            Console.WriteLine("Ошибка: Студент с данным ID не найден.");
+//        }
+//    }
+
+//    public void ListStudents()
+//    {
+//        if (students.Count == 0)
+//        {
+//            Console.WriteLine("Нет студентов для отображения.");
+//            return;
+//        }
+
+//        foreach (var student in students)
+//        {
+//            Console.WriteLine($"ID: {student.Id}, Name: {student.Name}, Email: {student.Email}");
+//        }
+//    }
+
+//    public void AddAttendance(int studentId, AttendanceRecord record)
+//    {
+//        var student = students.FirstOrDefault(s => s.Id == studentId);
+//        if (student != null)
+//        {
+//            student.Attendance.Add(record);
+//            SaveStudents();
+//            Console.WriteLine("Запись о посещении успешно добавлена.");
+//        }
+//        else
+//        {
+//            Console.WriteLine("Ошибка: Студент с данным ID не найден.");
+//        }
+//    }
+
+//    public void ListAttendance(int studentId)
+//    {
+//        var student = students.FirstOrDefault(s => s.Id == studentId);
+//        if (student != null)
+//        {
+//            Console.WriteLine($"Посещения для студента {student.Name}:");
+//            foreach (var record in student.Attendance)
+//            {
+//                Console.WriteLine($"Дата: {record.Date.ToShortDateString()}, Присутствовал: {(record.IsPresent ? "П" : "О")}");
+//            }
+//        }
+//        else
+//        {
+//            Console.WriteLine("Ошибка: Студент с данным ID не найден.");
+//        }
+//    }
+
+//    public void ListAllAttendance()
+//    {
+//        if (students.Count == 0)
+//        {
+//            Console.WriteLine("Нет студентов для отображения.");
+//            return;
+//        }
+
+//        foreach (var student in students)
+//        {
+//            Console.WriteLine($"Посещения для студента {student.Name}:");
+//            foreach (var record in student.Attendance)
+//            {
+//                Console.WriteLine($"ID: {student.Id}, Дата: {record.Date.ToShortDateString()}, Присутствовал: {(record.IsPresent ? "П" : "О")}");
+//            }
+//            Console.WriteLine(); // Добавляем пустую строку для удобства чтения
+//        }
+//    }
+
+//    public void AddGrade(int studentId, string subjectName, double grade)
+//    {
+//        var student = students.FirstOrDefault(s => s.Id == studentId);
+//        if (student != null)
+//        {
+//            var subject = student.Subjects.FirstOrDefault(s => s.Name.Equals(subjectName, StringComparison.OrdinalIgnoreCase));
+//            if (subject == null)
+//            {
+//                subject = new Subject(subjectName);
+//                student.Subjects.Add(subject);
+//            }
+//            subject.Grades.Add(grade);
+//            SaveStudents();
+//            Console.WriteLine($"Оценка {grade} по предмету {subjectName} добавлена для студента {student.Name}.");
+//        }
+//        else
+//        {
+//            Console.WriteLine("Ошибка: Студент с данным ID не найден.");
+//        }
+//    }
+
+//    public void ListAllGrades(int studentId)
+//    {
+//        var student = students.FirstOrDefault(s => s.Id == studentId);
+//        if (student != null)
+//        {
+//            Console.WriteLine($"Оценки для студента {student.Name}:");
+//            foreach (var subject in student.Subjects)
+//            {
+//                double average = subject.GetAverageGrade();
+//                Console.WriteLine($"Предмет: {subject.Name}, Оценки: {string.Join(", ", subject.Grades)}, Средний балл: {average:F2}");
+//            }
+//        }
+//        else
+//        {
+//            Console.WriteLine("Ошибка: Студент с данным ID не найден.");
+//        }
+//    }
+
+//    public bool IsValidEmail(string email)
+//    {
+//        string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+//        return Regex.IsMatch(email, pattern);
+//    }
+
+//    public bool AuthenticateUser(string username, string password, out User user)
+//    {
+//        user = users.FirstOrDefault(u => u.Username == username && u.Password == password);
+//        return user != null;
+//    }
+
+//    public void AddUser(User user)
+//    {
+//        users.Add(user);
+//        SaveUsers();
+//    }
+//}
+
+//class Program
+//{
+//    static void Main(string[] args)
+//    {
+//        AttendanceManager manager = new AttendanceManager();
+//        bool running = true;
+
+//        while (true)
+//        {
+//            Console.WriteLine("Вход: Введите логин и пароль.");
+//            Console.Write("Логин: ");
+//            string username = Console.ReadLine();
+//            Console.Write("Пароль: ");
+//            string password = Console.ReadLine();
+
+//            if (manager.AuthenticateUser(username, password, out User user))
+//            {
+//                Console.WriteLine($"Добро пожаловать, {username}!");
+
+//                if (user.IsTeacher)
+//                {
+//                    // Меню для преподавателя
+//                    while (running)
+//                    {
+//                        Console.WriteLine("Меню преподавателя:");
+//                        Console.WriteLine("1. Добавить студента");
+//                        Console.WriteLine("2. Удалить студента");
+//                        Console.WriteLine("3. Редактировать студента");
+//                        Console.WriteLine("4. Показать всех студентов");
+//                        Console.WriteLine("5. Добавить запись о посещении");
+//                        Console.WriteLine("6. Показать записи о посещаемости");
+//                        Console.WriteLine("7. Показать всю посещаемость");
+//                        Console.WriteLine("8. Добавить оценку");
+//                        Console.WriteLine("9. Показать все предметы и оценки для студента");
+//                        Console.WriteLine("10. Выход");
+
+//                        switch (Console.ReadLine())
+//                        {
+//                            case "1":
+//                                Console.Write("Введите имя студента: ");
+//                                string name = Console.ReadLine();
+
+//                                string email;
+//                                do
+//                                {
+//                                    Console.Write("Введите email студента: ");
+//                                    email = Console.ReadLine();
+//                                    if (!manager.IsValidEmail(email))
+//                                    {
+//                                        Console.WriteLine("Некорректный email. Попробуйте снова.");
+//                                    }
+//                                } while (!manager.IsValidEmail(email));
+
+//                                manager.AddStudent(new Student { Name = name, Email = email });
+//                                break;
+//                            case "2":
+//                                Console.Write("Введите ID студента для удаления: ");
+//                                if (int.TryParse(Console.ReadLine(), out int removeId))
+//                                {
+//                                    manager.RemoveStudent(removeId);
+//                                }
+//                                else
+//                                {
+//                                    Console.WriteLine("Некорректный ввод. Пожалуйста, введите число.");
+//                                }
+//                                break;
+//                            case "3":
+//                                Console.Write("Введите ID студента для редактирования: ");
+//                                if (int.TryParse(Console.ReadLine(), out int editId))
+//                                {
+//                                    Console.Write("Введите новое имя студента: ");
+//                                    string newName = Console.ReadLine();
+
+//                                    string newEmail;
+//                                    do
+//                                    {
+//                                        Console.Write("Введите новый email студента: ");
+//                                        newEmail = Console.ReadLine();
+//                                        if (!manager.IsValidEmail(newEmail))
+//                                        {
+//                                            Console.WriteLine("Некорректный email. Попробуйте снова.");
+//                                        }
+//                                    } while (!manager.IsValidEmail(newEmail));
+
+//                                    manager.EditStudent(editId, new Student { Name = newName, Email = newEmail });
+//                                }
+//                                else
+//                                {
+//                                    Console.WriteLine("Некорректный ввод. Пожалуйста, введите число.");
+//                                }
+//                                break;
+//                            case "4":
+//                                manager.ListStudents();
+//                                break;
+//                            case "5":
+//                                Console.Write("Введите ID студента для добавления посещения: ");
+//                                if (int.TryParse(Console.ReadLine(), out int attendanceId))
+//                                {
+//                                    Console.Write("Введите дату посещения (yyyy-MM-dd): ");
+//                                    if (DateTime.TryParse(Console.ReadLine(), out DateTime date))
+//                                    {
+//                                        Console.Write("Присутствовал? (П/О): ");
+//                                        string presenceInput = Console.ReadLine().ToUpper();
+//                                        bool isPresent = presenceInput == "П";
+//                                        manager.AddAttendance(attendanceId, new AttendanceRecord(date, isPresent));
+//                                    }
+//                                    else
+//                                    {
+//                                        Console.WriteLine("Некорректный формат даты.");
+//                                    }
+//                                }
+//                                else
+//                                {
+//                                    Console.WriteLine("Некорректный ввод. Пожалуйста, введите число.");
+//                                }
+//                                break;
+//                            case "6":
+//                                Console.Write("Введите ID студента для показа посещаемости: ");
+//                                if (int.TryParse(Console.ReadLine(), out int attendanceShowId))
+//                                {
+//                                    manager.ListAttendance(attendanceShowId);
+//                                }
+//                                else
+//                                {
+//                                    Console.WriteLine("Некорректный ввод. Пожалуйста, введите число.");
+//                                }
+//                                break;
+//                            case "7":
+//                                manager.ListAllAttendance();
+//                                break;
+//                            case "8":
+//                                Console.Write("Введите ID студента для добавления оценки: ");
+//                                if (int.TryParse(Console.ReadLine(), out int gradeId))
+//                                {
+//                                    Console.Write("Введите название предмета: ");
+//                                    string subjectName = Console.ReadLine();
+//                                    Console.Write("Введите оценку: ");
+//                                    if (double.TryParse(Console.ReadLine(), out double grade))
+//                                    {
+//                                        manager.AddGrade(gradeId, subjectName, grade);
+//                                    }
+//                                    else
+//                                    {
+//                                        Console.WriteLine("Некорректный ввод оценки.");
+//                                    }
+//                                }
+//                                else
+//                                {
+//                                    Console.WriteLine("Некорректный ввод. Пожалуйста, введите число.");
+//                                }
+//                                break;
+//                            case "9":
+//                                Console.Write("Введите ID студента для показа всех предметов и оценок: ");
+//                                if (int.TryParse(Console.ReadLine(), out int gradesShowId))
+//                                {
+//                                    manager.ListAllGrades(gradesShowId);
+//                                }
+//                                else
+//                                {
+//                                    Console.WriteLine("Некорректный ввод. Пожалуйста, введите число.");
+//                                }
+//                                break;
+//                            case "10":
+//                                running = false;
+//                                break;
+//                            default:
+//                                Console.WriteLine("Неверный выбор, попробуйте еще раз.");
+//                                break;
+//                        }
+//                    }
+//                }
+//                else
+//                {
+//                    // Меню для ученика
+//                    Console.Write("Введите ваш ID: ");
+//                    if (int.TryParse(Console.ReadLine(), out int studentId))
+//                    {
+//                        manager.ListAllGrades(studentId);
+//                    }
+//                    else
+//                    {
+//                        Console.WriteLine("Некорректный ввод. Пожалуйста, введите число.");
+//                    }
+//                }
+//            }
+//            else
+//            {
+//                Console.WriteLine("Ошибка: Неверный логин или пароль.");
+//            }
+//        }
+//    }
+//}
 
 
