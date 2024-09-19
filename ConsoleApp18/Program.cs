@@ -1022,3 +1022,335 @@ class Program
 //}
 
 
+//ТАНЧИКИ
+
+//using System;
+//using System.Collections.Generic;
+//using System.Threading;
+
+//public enum Cell
+//{
+//    Empty,
+//    Brick,   // Разрушаемая стена
+//    Steel,   // Неразрушаемая стена
+//    Base,    // База
+//    T1,      // Танк игрока 1
+//    T2,      // Танк игрока 2
+//    Enemy1,  // Танк противника 1
+//    Enemy2,  // Танк противника 2
+//    Bullet   // Снаряд
+//}
+
+//public class Tank
+//{
+//    public int X { get; private set; }
+//    public int Y { get; private set; }
+//    public int Health { get; private set; }
+//    public char Symbol { get; private set; }
+//    public ConsoleKey MoveUp;
+//    public ConsoleKey MoveDown;
+//    public ConsoleKey MoveLeft;
+//    public ConsoleKey MoveRight;
+//    public ConsoleKey Fire;
+
+//    public Tank(int x, int y, char symbol, ConsoleKey up = ConsoleKey.NoName, ConsoleKey down = ConsoleKey.NoName, ConsoleKey left = ConsoleKey.NoName, ConsoleKey right = ConsoleKey.NoName, ConsoleKey fire = ConsoleKey.NoName)
+//    {
+//        X = x;
+//        Y = y;
+//        Health = 3;
+//        Symbol = symbol;
+//        MoveUp = up;
+//        MoveDown = down;
+//        MoveLeft = left;
+//        MoveRight = right;
+//        Fire = fire;
+//    }
+
+//    public void Move(int dx, int dy)
+//    {
+//        X += dx;
+//        Y += dy;
+//    }
+
+//    public void TakeDamage()
+//    {
+//        Health--;
+//    }
+
+//    public bool IsAlive()
+//    {
+//        return Health > 0;
+//    }
+//}
+
+//public class Bullet
+//{
+//    public int X { get; private set; }
+//    public int Y { get; private set; }
+//    public int DX { get; private set; }
+//    public int DY { get; private set; }
+
+//    public Bullet(int x, int y, int dx, int dy)
+//    {
+//        X = x;
+//        Y = y;
+//        DX = dx;
+//        DY = dy;
+//    }
+
+//    public void Move()
+//    {
+//        X += DX;
+//        Y += DY;
+//    }
+//}
+
+//public class GameField
+//{
+//    private Cell[,] field;
+//    private Tank player1;
+//    private Tank player2;
+//    private Tank enemy1;
+//    private Tank enemy2;
+//    private List<Bullet> bullets = new List<Bullet>();
+//    private Random random = new Random();
+
+//    public GameField(Tank t1, Tank t2, Tank e1, Tank e2)
+//    {
+//        player1 = t1;
+//        player2 = t2;
+//        enemy1 = e1;
+//        enemy2 = e2;
+//        field = new Cell[13, 13];
+//        InitField();
+//    }
+
+//    private void InitField()
+//    {
+//        // Инициализация поля, стен и базы
+//        for (int i = 0; i < 13; i++)
+//        {
+//            for (int j = 0; j < 13; j++)
+//            {
+//                field[i, j] = Cell.Empty;
+//            }
+//        }
+
+//        for (int i = 4; i < 9; i++)
+//        {
+//            field[11, i] = Cell.Brick; // Стены вокруг базы
+//        }
+//        field[12, 6] = Cell.Base; // База
+
+//        PlaceTank(player1);
+//        PlaceTank(player2);
+//        PlaceTank(enemy1);
+//        PlaceTank(enemy2);
+//    }
+
+//    public void UpdateField()
+//    {
+//        Console.Clear();
+//        InitField();
+//        PlaceBullets();
+//        DisplayField();
+//    }
+
+//    private void DisplayField()
+//    {
+//        for (int i = 0; i < 13; i++)
+//        {
+//            for (int j = 0; j < 13; j++)
+//            {
+//                switch (field[i, j])
+//                {
+//                    case Cell.Empty: Console.Write(". "); break;
+//                    case Cell.Brick: Console.Write("# "); break;
+//                    case Cell.Steel: Console.Write("O "); break;
+//                    case Cell.Base: Console.Write("B "); break;
+//                    case Cell.T1: Console.Write("T1"); break;
+//                    case Cell.T2: Console.Write("T2"); break;
+//                    case Cell.Enemy1: Console.Write("E1"); break;
+//                    case Cell.Enemy2: Console.Write("E2"); break;
+//                    case Cell.Bullet: Console.Write("* "); break;
+//                }
+//            }
+//            Console.WriteLine();
+//        }
+//    }
+
+//    public void PlaceTank(Tank tank)
+//    {
+//        if (tank.IsAlive())
+//        {
+//            if (tank.Symbol == '1')
+//                field[tank.X, tank.Y] = Cell.Enemy1;
+//            else if (tank.Symbol == '2')
+//                field[tank.X, tank.Y] = Cell.Enemy2;
+//            else
+//                field[tank.X, tank.Y] = tank.Symbol == '1' ? Cell.T1 : Cell.T2;
+//        }
+//    }
+
+//    public void AddBullet(Bullet bullet)
+//    {
+//        bullets.Add(bullet);
+//    }
+
+//    public void PlaceBullets()
+//    {
+//        foreach (var bullet in bullets)
+//        {
+//            if (bullet.X >= 0 && bullet.X < 13 && bullet.Y >= 0 && bullet.Y < 13)
+//            {
+//                field[bullet.X, bullet.Y] = Cell.Bullet;
+//            }
+//        }
+//    }
+
+//    public bool CheckHit(Tank tank)
+//    {
+//        foreach (var bullet in bullets)
+//        {
+//            if (bullet.X == tank.X && bullet.Y == tank.Y)
+//            {
+//                tank.TakeDamage();
+//                bullets.Remove(bullet);
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+//    public void MoveBullets()
+//    {
+//        foreach (var bullet in bullets)
+//        {
+//            bullet.Move();
+//        }
+//        bullets.RemoveAll(b => b.X < 0 || b.X >= 13 || b.Y < 0 || b.Y >= 13);
+//    }
+
+//    public void CheckCollision()
+//    {
+//        for (int i = bullets.Count - 1; i >= 0; i--)
+//        {
+//            Bullet bullet = bullets[i];
+//            if (field[bullet.X, bullet.Y] == Cell.Brick)
+//            {
+//                field[bullet.X, bullet.Y] = Cell.Empty;
+//                bullets.RemoveAt(i);
+//            }
+//            else if (field[bullet.X, bullet.Y] == Cell.Base)
+//            {
+//                Console.WriteLine("База разрушена! Игра окончена!");
+//                Environment.Exit(0);
+//            }
+//        }
+//    }
+
+//    public void MoveEnemy(Tank enemy)
+//    {
+//        int direction = random.Next(4); // Случайное движение
+//        switch (direction)
+//        {
+//            case 0: if (enemy.X > 0) enemy.Move(-1, 0); break; // Вверх
+//            case 1: if (enemy.X < 12) enemy.Move(1, 0); break; // Вниз
+//            case 2: if (enemy.Y > 0) enemy.Move(0, -1); break; // Влево
+//            case 3: if (enemy.Y < 12) enemy.Move(0, 1); break; // Вправо
+//        }
+
+//        // Случайный шанс стрельбы
+//        if (random.Next(10) < 2)
+//        {
+//            int dx = 0, dy = 0;
+//            if (direction == 0) dx = -1;
+//            if (direction == 1) dx = 1;
+//            if (direction == 2) dy = -1;
+//            if (direction == 3) dy = 1;
+//            Bullet bullet = new Bullet(enemy.X, enemy.Y, dx, dy);
+//            AddBullet(bullet);
+//        }
+//    }
+//}
+
+//public class Game
+//{
+//    private Tank player1;
+//    private Tank player2;
+//    private Tank enemy1;
+//    private Tank enemy2;
+//    private GameField field;
+
+//    public Game()
+//    {
+//        player1 = new Tank(12, 5, '1', ConsoleKey.W, ConsoleKey.S, ConsoleKey.A, ConsoleKey.D, ConsoleKey.Spacebar);
+//        player2 = new Tank(0, 5, '2', ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow, ConsoleKey.Enter);
+//        enemy1 = new Tank(5, 0, '1');
+//        enemy2 = new Tank(5, 12, '2');
+//        field = new GameField(player1, player2, enemy1, enemy2);
+//    }
+
+//    public void Start()
+//    {
+//        bool gameRunning = true;
+//        while (gameRunning)
+//        {
+//            field.UpdateField();
+
+//            if (Console.KeyAvailable)
+//            {
+//                var key = Console.ReadKey(true).Key;
+//                MovePlayer(player1, key);
+//                MovePlayer(player2, key);
+//                FireBullet(player1, key);
+//                FireBullet(player2, key);
+//            }
+
+//            field.MoveBullets();
+//            field.CheckCollision();
+//            field.CheckHit(player1);
+//            field.CheckHit(player2);
+//            field.CheckHit(enemy1);
+//            field.CheckHit(enemy2);
+
+//            if (!player1.IsAlive() || !player2.IsAlive() || !enemy1.IsAlive() || !enemy2.IsAlive())
+//            {
+//                gameRunning = false;
+//                Console.WriteLine("Игра окончена!");
+//            }
+
+//            field.MoveEnemy(enemy1);
+//            field.MoveEnemy(enemy2);
+
+//            Thread.Sleep(500); // Задержка обновления
+//        }
+//    }
+
+//    private void MovePlayer(Tank player, ConsoleKey key)
+//    {
+//        if (key == player.MoveUp && player.X > 0) player.Move(-1, 0);
+//        if (key == player.MoveDown && player.X < 12) player.Move(1, 0);
+//        if (key == player.MoveLeft && player.Y > 0) player.Move(0, -1);
+//        if (key == player.MoveRight && player.Y < 12) player.Move(0, 1);
+//    }
+
+//    private void FireBullet(Tank player, ConsoleKey key)
+//    {
+//        if (key == player.Fire)
+//        {
+//            Bullet bullet = new Bullet(player.X, player.Y, -1, 0); // Стрельба вверх
+//            field.AddBullet(bullet);
+//        }
+//    }
+//}
+
+//class Program
+//{
+//    static void Main(string[] args)
+//    {
+//        Game game = new Game();
+//        game.Start();
+//    }
+//}
+
